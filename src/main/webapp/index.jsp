@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!-- 내가 고라니라니 -->
+<!-- 내가 고라니라니  -->
 <script type="text/javascript">
 	location.href = "deptList.do";
 </script>
