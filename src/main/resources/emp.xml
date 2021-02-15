@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace : xml을 구별하기 위한 이름  -->
+<!-- resultMap은 table에 있는 컬럼명과 class에 member변수명이 다를 때 mapping하는 용도  -->
+<mapper namespace="empns">
+<!-- resultMap은 table에 컬럼명과 class의 dept변수명이 다를 때 사용 -->
+<!-- property는 클래스명, column은 테이블명 -->
+	<resultMap type="emp" id="empResult">
+		<result property="empno"	column="empno"/>
+		<result property="ename" 	column="ename"/>
+		<result property="job" 		column="job"/>
+		<result property="mgr" 		column="mgr"/>
+		<result property="mgrName" 	column="mgrName"/>
+		<result property="hiredate" column="hiredate"/>
+		<result property="sal" 		column="sal"/>
+		<result property="comm" 	column="comm"/>
+		<result property="deptno" 	column="deptno"/>
+		<!-- join용으로 부서 전체 정보를 가져옴 -->
+		<collection property="dept" resultMap="deptResult"></collection>
+	</resultMap>
+	<resultMap type="dept" id="deptResult">
+		<result property="deptno"	column="deptno"/>
+		<result property="dname" 	column="dname"/>
+		<result property="loc" 		column="loc"/>
+	</resultMap>
+<!-- parameterType은 DaoImpl로 부터 데이터를 제공받아서 xml에서 사용할 때 받는 데이터타입 -->
+	<select id="list" parameterType="integer" resultType="emp">
+<!--<select id="list" parameterType="integer" resultMap="empResult"> -->
+		select * from emp where deptno=#{deptno} order by ename
+	</select>
+	<!-- 외부 데이터를 받는 경우 parameterType 사용, 받는 데이터가 없으므로(전부 받으므로) 안써도 됨 -->
+	<select id="empList" resultMap="empResult">
+		select * from emp order by ename
+	</select>
+	<select id="select" parameterType="integer" resultType="emp">
+		select * from emp where empno=#{empno}
+	</select>
+	<!-- # : 값을 가져올 때, $ : 변수명  -->
+	<insert id="insert" parameterType="emp">
+		insert into emp values(#{empno},#{ename},#{job},#{mgr},
+			#{hiredate},#{sal},#{comm},#{deptno}) 
+	</insert>
+	<update id="update" parameterType="emp">
+		update emp set ename=#{ename},job=#{job},mgr=#{mgr},
+			hiredate=#{hiredate},sal=#{sal},comm=#{comm},
+			deptno=#{deptno} where empno=#{empno}
+	</update>
+	<delete id="delete" parameterType="integer">
+		delete from emp where empno=#{empno}
+	</delete>
+	<!-- empResult는 emp에 dept테이블까지 포함 -->
+	<select id="allEmpList" resultMap="empResult">
+		select w.*,m.ename mgrName,d.* from emp m, emp w, dept d 
+			where w.deptno=d.deptno and w.mgr=m.empno(+) 
+			order by w.deptno, w.sal desc
+	</select>
+	<!-- <select id="allEmpList" resultMap="empResult">
+		select e.*,d.* from emp e, dept d 
+			where e.deptno=d.deptno order by e.deptno, sal desc
+	</select> -->
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace : xml을 구별하기 위한 이름  -->
+<!-- resultMap은 table에 있는 컬럼명과 class에 member변수명이 다를 때 mapping하는 용도  -->
+<mapper namespace="deptns">
+<!-- resultMap은 table에 컬럼명과 class의 dept변수명이 다를 때 사용 -->
+<!-- property는 클래스명, column은 테이블명 -->
+	<resultMap type="dept" id="deptResult">
+		<result property="deptno"	column="deptno"/>
+		<result property="dname" 	column="dname"/>
+		<result property="loc" 		column="loc"/>
+	</resultMap>
+	<!-- select resultMap에는 위의 resultMap의 id값을 넣는다. -->
+	<select id="list" resultMap="deptResult">
+		select * from dept order by deptno
+	</select>
+	<select id="select" parameterType="integer" resultType="dept">
+		select * from dept where deptno=#{deptno}
+	</select>
+	<insert id="insert" parameterType="dept">
+		insert into dept values (#{deptno}, #{dname}, #{loc})
+	</insert>
+	<update id="update" parameterType="dept">
+		update dept set dname=#{dname}, loc=#{loc}
+			where deptno=#{deptno}
+	</update>
+	<delete id="delete" parameterType="integer">
+		delete from dept where deptno=#{deptno}
+	</delete>
+</mapper>
