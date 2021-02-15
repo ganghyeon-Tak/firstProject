@@ -1,0 +1,4 @@
+1. 게시판
+  - 채팅, 프로젝트 예제, tiles : jsp site-mesh와 유사
+  - hibernate web, spring boot
+  - 쉬운 순서 : 공지사항 < 질의 응답 < 댓글 게시판 < 답글 게시판 < 댓글 + 답글 게시판
